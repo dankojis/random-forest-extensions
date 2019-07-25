@@ -1,81 +1,144 @@
-library("fuzzyforest")
-source("WGCNA_TS.r")
-library("WGCNA")
-library("randomForest")
+library("proxy")
+library("dtw")
+library("rucrdtw")
 
+# Normalize each time series (not a column)
+normalize_TS = function(X,len_time){
+  normalized_X = matrix(0,dim(X)[1],dim(X)[2])
+  flag = 1 # record the first index of the current time series
+  for (t in len_time){
+    normalized_X[flag:(flag+t-1),] = scale(X[flag:(flag+t-1),])
+    flag = flag + t
+  }
+  return (normalized_X)
+}
 
-#data
-data <- read.csv(file="data4.csv", header=TRUE, sep=",")
-
-data <- data_x
-
-data = data[,-1] # delete the X column (name of rows)
-X = data[,-ncol(data)]
-y = data[,ncol(data)]
-
-################## parameters for FF (ff) ################
-# params is stored in xxx_control object
-mtry_factor     = 1 # mtry = sqrt(p)*mtry_factor; mtry is the num in subspace method
-drop_fraction   = 0.25 # drop xxx in each iteration of RFE-RF
-number_selected = 8 # we want 10 out of all features
-keep_fraction   = 0.05 # keep xxx for each module
-min_ntree        = 500 # used for calculating ntree
-ntree_factor    = 5 # used for calculating ntree
-final_ntree     = 500 # RF in selecting step
-
-screen_params = screen_control(drop_fraction = drop_fraction,
-                               keep_fraction  = keep_fraction,
-                               min_ntree      = min_ntree,
-                               mtry_factor    = mtry_factor,
-                               ntree_factor   = ntree_factor)
-
-select_params = select_control(drop_fraction  = drop_fraction,
-                               number_selected = number_selected,
-                               min_ntree       = min_ntree,
-                               mtry_factor     = mtry_factor,
-                               ntree_factor    = ntree_factor)
-
-############# parameters for WGCNA_TS ########
-# type used for computing time series distance
-type = "cor"
-# the time length for each units
-len_time = rep(5,100)
-# beta
-softPower = 6
-# We like large modules, so we set the minimum module size relatively high
-minModuleSize = 30
-# When merge similar modules using eigengenes (After we get modules for dissTom)
-# We choose a height cut of MEDissThres (= 0.25 for example) corresponding to 
-# correlation of 1-MEDissThres (0.75) to merge
-MEDissThres = 0.25
-#################################################
-
-# compute module membership by WGCNA_TS
-# X = X[,1:32] ###### test!!!
-module_membership = WGCNA_TS(X,len_time,softPower,minModuleSize,MEDissThres,type)
-# module_membership #####test!!!
-
-
-
-table(module_membership)
-
-
-
-
-module_membership
-
-
-
-
-ff_fit = ff(X, y,module_membership=module_membership,
-            screen_params = screen_control(min_ntree = 500),
-            select_params = select_control(min_ntree = 500), final_ntree = 5000,
-            num_processors = 1)
-
-
-print(ff_fit)
-
-
-
-modplot(ff_fit)
-varImpPlot(ff_fit$final_rf,type=2,main="Variable Importance Plot")
+# The main function                                                 
+# compute similarity using different measure
+similarity_TS = function(X,len_time,type){
+  p = dim(X)[2] # num of features
+  n = length(len_time) # number of samples
+  
+  ## type = cor, no need to normalize ##
+  if (type == "cor"){
+    # first compute distance matrix
+    if (n==1){
+      cor_mat = cor(X)
+    }else{
+      # cor_mat can be computed like a vector! but I have to create it
+      cor_mat = cor(X[1:len_time[1],])*len_time[1]
+      flag = 1+len_time[1] # the first time index of the current sample
+      for (sample in 2:n){
+        cor_mat = (cor_mat + 
+                     cor(X[flag:(flag+len_time[sample]-1),])*len_time[sample])
+        
+        flag = flag+len_time[sample]
+      }
+      cor_mat = cor_mat/(sum(len_time))
+    }     
+    
+    return (cor_mat)
+  } # end "cor"
+  
+  ## type = fastDTW, no need to normalize ##
+  if (type == "fastDTW"){
+    # pre-allocate memory
+    dist_mat = matrix(0,p,p)
+    if (n==1){
+      for (i in 1:(p-1)){
+        for (j in (i+1):p){
+          dist_mat[i,j] = ucrdtw_vv(X[,i], X[,j], 0.05)$distance
+        }
+      }
+    }else{
+      flag = 1 # the first time index of the current sample
+      for (sample in 1:n){
+        for (i in 1:(p-1)){
+          for (j in (i+1):p){
+            dist_mat[i,j] = (dist_mat[i,j]
+                             +(ucrdtw_vv(X[flag:(flag+len_time[sample]-1),i], 
+                                         X[flag:(flag+len_time[sample]-1),j],
+                                         0.05)$distance)*len_time[sample])
+          }
+        }                
+        flag = flag+len_time[sample]
+      }
+      dist_mat = dist_mat/(sum(len_time))
+    }
+    # complete the matrix (diag=0 automatically)
+    dist_mat[lower.tri(dist_mat)] = t(dist_mat)[lower.tri(dist_mat)]
+    
+    # transform dist to similarity
+    sim_matrix = 1/(1+dist_mat)
+    
+    return (sim_matrix)
+  } # end "fastDTW"
+  
+  #### data Z score normaliztion #####
+  X = normalize_TS(X,len_time) # normalize time series
+  #check for missing value (may due to sigma=0)
+  tmp = sum(is.na(X))
+  if(tmp>0){
+    stop(sprintf("There are %d missing values in normalized X",tmp))
+  }
+  ### end normalization ###
+  
+  
+  # "L2" using dist(M) which computes dist between rows of M
+  if (type == "L2"|type == "Euclidean"){
+    # first compute distance matrix
+    if (n==1){
+      dist_obj = dist(t(X),method = "euclidean")
+    }else{
+      # dist_obj can be computed like a vector! but I have to create it
+      dist_obj = dist(t(X[1:len_time[1],]))*len_time[1]
+      flag = 1+len_time[1] # the first time index of the current sample
+      for (sample in 2:n){
+        dist_obj = (dist_obj + 
+                      dist(t(X[flag:(flag+len_time[sample]-1),]))*len_time[sample])
+        
+        flag = flag+len_time[sample]
+      }
+      dist_obj = dist_obj/(sum(len_time))
+    }     
+    
+    # transform dist to similarity
+    sim_obj = 1/(1+dist_obj)
+    # similarity matrix
+    sim_matrix = as.matrix(sim_obj)
+    diag(sim_matrix) = 1
+    
+    return (sim_matrix)
+  } # end "L2"
+  
+  # "dtw" using dtwDist(M) which computes dist between rows of M
+  if (type == "dtw" | type == "DTW"){
+    # first compute distance matrix
+    if (n==1){
+      dist_obj = dtwDist(t(X))
+    }else{
+      # dist_obj can be computed like a vector! but I have to create it
+      dist_obj = dtwDist(t(X[1:len_time[1],]))*len_time[1]
+      flag = 1+len_time[1] # the first time index of the current sample
+      for (sample in 2:n){
+        dist_obj = (dist_obj + 
+                      dtwDist(t(X[flag:(flag+len_time[sample]-1),]))*len_time[sample])
+        
+        flag = flag+len_time[sample]
+      }
+      dist_obj = dist_obj/(sum(len_time))
+    }     
+    
+    # transform dist to similarity
+    sim_obj = 1/(1+dist_obj)
+    # similarity matrix
+    sim_matrix = as.matrix(sim_obj)
+    diag(sim_matrix) = 1
+    
+    return (sim_matrix)
+  } # end "dtw"
+  
+  
+  stop("The type is not availble")
+  
+}
