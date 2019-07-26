@@ -1,18 +1,26 @@
-# source("TimeSeriesSimilarity.r") # used for similarity matrix 
+ source("TimeSeriesSimilarity.r") # used for similarity matrix 
 # must run above code manually
 source("WGCNA_TS.R")
 source('simData_methods.R')
 
 
 # generate data 
-#data30 <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.3,0.3,0.3,0.3,0.0), var_noise = 1,alpha = 0.8)
-# data20 <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.2,0.2,0.2,0.0), var_noise = 1,alpha = 0.8)
-# data60 <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.6,0.6,0.6,0.6,0.0), var_noise = 1,alpha = 0.8)
-# data80 <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.8,0.8,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
- dataMix1 <- simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.4,0.6,0.8,0.0), var_noise = 1,alpha = 0.8)
-# dataMix2 <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.3,0.3,0.6,0.9,0.0), var_noise = 1,alpha = 0.8)
-# dataMix3 <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.4,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
+# data30
+# data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.3,0.3,0.3,0.3,0.0), var_noise = 1,alpha = 0.8)
+# data20
+ #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.2,0.2,0.2,0.0), var_noise = 1,alpha = 0.8)
+# data60
+ #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.6,0.6,0.6,0.6,0.0), var_noise = 1,alpha = 0.8)
+# data80
+ #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.8,0.8,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
+# dataMix1 
+# data <- simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.4,0.6,0.8,0.0), var_noise = 1,alpha = 0.8)
+# dataMix2 
+ #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.4,0.5,0.6,0.9,0.0), var_noise = 1,alpha = 0.8)
+# dataMix3 
+ data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.4,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
 
+ 
 
 X = data[,-ncol(data)]
 y = data[,ncol(data)]
@@ -118,7 +126,7 @@ for(i in beta){
 
 
 
-save(results, file='data60.Rda')
+saveRDS(results, file='dataMix3.Rds')
 
 
 
