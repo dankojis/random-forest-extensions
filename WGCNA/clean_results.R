@@ -2,12 +2,12 @@ library(dplyr)
 library(magrittr)
 
 
-load("data20.Rda")
+load("data20.Rds")
 
 
-results$data <- "Cor feature = 0.2"
+results1$data <- "Cor feature = 0.2"
 # Select the best perfomring paramaters for each method
-results %<>% filter(Type == "cor" & Beta == 6 & Threshold == 0.25|
+results1 %<>% filter(Type == "cor" & Beta == 6 & Threshold == 0.25|
                       Type == "L2" & Beta == 6 & Threshold == 0.25|
                       Type == "Regular" & Beta == 6 & Threshold == 0.25|
                       Type == "blockwiseModules" & Beta == 2 & Threshold == 0.25|
@@ -15,7 +15,8 @@ results %<>% filter(Type == "cor" & Beta == 6 & Threshold == 0.25|
 
 
 
-results2 <- results
+
+
 
 
 
