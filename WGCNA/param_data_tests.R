@@ -5,7 +5,8 @@ source('simData_methods.R')
 
 
 # generate data 
-# data30
+
+ # data30
 # data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.3,0.3,0.3,0.3,0.0), var_noise = 1,alpha = 0.8)
 # data20
  #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.2,0.2,0.2,0.0), var_noise = 1,alpha = 0.8)
@@ -20,7 +21,7 @@ source('simData_methods.R')
 # dataMix3 
  data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.4,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
 
- 
+
 
 X = data[,-ncol(data)]
 y = data[,ncol(data)]
@@ -126,7 +127,11 @@ for(i in beta){
 
 
 
+<<<<<<< HEAD
 saveRDS(results, file='dataMix3.Rds')
+=======
+#save(results, file='data60.Rda')
+>>>>>>> 7e6b290749150ed746a36963dce9ca6c4846fc18
 
 
 
