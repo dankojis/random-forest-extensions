@@ -11,7 +11,7 @@ source('simData_methods.R')
 # data20
  #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.2,0.2,0.2,0.0), var_noise = 1,alpha = 0.8)
 # data60
- #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.6,0.6,0.6,0.6,0.0), var_noise = 1,alpha = 0.8)
+ data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.6,0.6,0.6,0.6,0.0), var_noise = 1,alpha = 0.8)
 # data80
  #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.8,0.8,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
 # dataMix1 
@@ -19,7 +19,9 @@ source('simData_methods.R')
 # dataMix2 
  #data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.4,0.5,0.6,0.9,0.0), var_noise = 1,alpha = 0.8)
 # dataMix3 
- data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.4,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
+# data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.2,0.4,0.8,0.8,0.0), var_noise = 1,alpha = 0.8)
+# dataMix4
+ # data <-  simAR_dif_cor(n=100,T=5, group_cor = c(0.6,0.6,0.8,0.9,0.0), var_noise = 1,alpha = 0.8)
 
 
 
@@ -108,8 +110,9 @@ for(i in beta){
 
 ### fastDTW
 
-beta <- c(4,6,8)
-thresh <- c(0.20,0.25,0.30)
+beta <- c(6,8,10,14,16)
+#thresh <- c(0.20,0.25,0.30) # thresh doesn't appear to make a difference
+thresh <- 0.25
 
 for(i in beta){
   for(j in thresh){
@@ -127,11 +130,9 @@ for(i in beta){
 
 
 
-<<<<<<< HEAD
-saveRDS(results, file='dataMix3.Rds')
-=======
-#save(results, file='data60.Rda')
->>>>>>> 7e6b290749150ed746a36963dce9ca6c4846fc18
+
+#save(results, file='dataMix4.Rds')
+
 
 
 

@@ -2,17 +2,16 @@ library(dplyr)
 library(magrittr)
 
 
-q <-  readRDS("WGCNA/data results/data30.Rds")
-q <- readRDS("dataMix1.Rds")
 
 
-results1$data <- "Cor feature = 0.2"
-# Select the best perfomring paramaters for each method
-results1 %<>% filter(Type == "cor" & Beta == 6 & Threshold == 0.25|
-                      Type == "L2" & Beta == 6 & Threshold == 0.25|
-                      Type == "Regular" & Beta == 6 & Threshold == 0.25|
-                      Type == "blockwiseModules" & Beta == 2 & Threshold == 0.25|
-                      Type == "fastDTW" & Beta == 6 & Threshold == 0.25)
+# results1$data <- "Cor feature = 0.3"
+# results1 <-  readRDS("WGCNA/data results/data_30.Rds")
+# # Select the best perfomring paramaters for each method
+# results1 %<>% filter(Type == "cor" & Beta == 6 & Threshold == 0.25|
+#                       Type == "L2" & Beta == 6 & Threshold == 0.25|
+#                       Type == "Regular" & Beta == 6 & Threshold == 0.25|
+#                       Type == "blockwiseModules" & Beta == 2 & Threshold == 0.25|
+#                       Type == "fastDTW" & Beta == 6 & Threshold == 0.25)
 
 
 
@@ -20,7 +19,7 @@ results1 %<>% filter(Type == "cor" & Beta == 6 & Threshold == 0.25|
 
 
 # Cor feature = 0.8
-results2 <-  readRDS("WGCNA/data results/data80.Rds")
+results2 <-  readRDS("WGCNA/data results/data_80.Rds")
 results2$data <- "Cor featuer = 0.8"
 results2 %<>% filter(Type == "cor" & Beta == 6 & Threshold == 0.25|
                       Type == "L2" & Beta == 8 & Threshold == 0.25|
@@ -62,5 +61,9 @@ results5 %<>% filter(Type == "cor" & Beta == 2 & Threshold == 0.25|
 
 
 
-final <- rbind(results, results2)
+final <- rbind(results2, results3, results4, results5)
 final %<>% select(data, Type, everything())
+
+
+
+#save(final, file='WGCNA/data results/final.Rds')

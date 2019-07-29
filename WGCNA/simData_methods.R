@@ -49,54 +49,7 @@ sim_3_RE = function(n,T,cor_feature=0.8,var_noise=1,alpha=0.8){
 
 
 
-simAR_dif_cor = function(n,T,var_noise=1,alpha=0.8){
-  p = 500
-  p0 = 100
-  data = matrix(0,nrow = n*T, ncol = p+1)
-  
-  #### covariance matrix between features:
-  cov_feature = matrix(0,nrow = p, ncol = p)
 
-  cov_star1 = matrix(0.2,nrow = p0,ncol = p0) # set correlation for first group of variables
-  diag(cov_star1)=1
-  # put cov_star into cov_feature
-  cov_feature[1:p0,1:p0] = cov_star1
-  
-  cov_star2 = matrix(0.4,nrow = p0,ncol = p0)    # set correlation for 2nd group of variables
-  diag(cov_star2)=1
-  cov_feature[(p0+1):(2*p0),(p0+1):(2*p0)] = cov_star2
-  
-  cov_star3 = matrix(0.6,nrow = p0,ncol = p0) # set correlation for 3rd group of variables
-  diag(cov_star3)=1
-  cov_feature[(2*p0+1):(3*p0),(2*p0+1):(3*p0)] = cov_star3
-  
-  cov_star4 = matrix(0.8,nrow = p0,ncol = p0) # set correlation for 4th group of variables
-  diag(cov_star4)=1
-  cov_feature[(3*p0+1):(4*p0),(3*p0+1):(4*p0)] = cov_star4
-    
-  cov_feature[(4*p0+1):(5*p0),(4*p0+1):(5*p0)] = diag(p0)  # independent for last group
-  ####
-  
-  # create x matrix
-  tmp = (1-alpha**2)**0.5
-  for (i in 1:n){
-    data[1+(i-1)*T,1:p] = mvrnorm(n = 1, rep(0, p), cov_feature)
-    for (j in 2:T){
-      data[j+(i-1)*T,1:p] = (alpha*data[j-1+(i-1)*T,1:p]+
-                               tmp*mvrnorm(n = 1, rep(0, p), cov_feature))
-    }
-  }
-  
-  # incoroporate random effects for each patient
-  randomeffect <- rep(rnorm(n,0,5),each=T)
-  
-  
-  # create y 
-  data[1:(n*T),p+1] = ( f_sim(data[1:(n*T),1:p])+ 
-                          mvrnorm(n = 1, rep(0,n*T), diag(n*T)) + randomeffect )
-  
-  return(data)
-}
 
 
 # group_cor - input a vector of correlation values. The first value will be the correlation between the first
