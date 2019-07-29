@@ -55,6 +55,15 @@ results5 %<>% filter(Type == "cor" & Beta == 2 & Threshold == 0.25|
                        Type == "blockwiseModules" & Beta == 2 & Threshold == 0.25|
                        Type == "fastDTW" & Beta == 8 & Threshold == 0.25)
 
+# # Mix 4
+# results6 <-  readRDS("WGCNA/data results/dataMix4.Rds")
+# results6$data <- "Mix Cor (0.6,0.6,0.8,0.9,0.0)"
+# results6 %<>% filter(Type == "cor" & Beta == 2 & Threshold == 0.25|
+#                        Type == "L2" & Beta == 6 & Threshold == 0.25|
+#                        Type == "Regular" & Beta == 8 & Threshold == 0.25|
+#                        Type == "blockwiseModules" & Beta == 2 & Threshold == 0.25|
+#                        Type == "fastDTW" & Beta == 8 & Threshold == 0.25)
+
 
 
 

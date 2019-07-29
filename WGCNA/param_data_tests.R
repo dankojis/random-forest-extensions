@@ -131,7 +131,7 @@ for(i in beta){
 
 
 
-#save(results, file='dataMix4.Rds')
+save(results, file='dataMix4.Rds')
 
 
 
