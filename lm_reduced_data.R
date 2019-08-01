@@ -72,10 +72,10 @@ for(var in residual_var){
 }
 
 a <- seq(from=1,to=n*T, by=T) # index for first time observation of each patient
-data <- data[a,] # keep only one observation per patient
+data <- data[a,] # keep only one observation (where the sum was stored) per patient
       
 
-# # for checking dataset
+# # Useful for checking dataset
 # lm <- lm(V1[221:225]~time[221:225], data)
 # summary(lm)
 # plot(data$time[221:225], data$V1[221:225])
