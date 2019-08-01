@@ -3,19 +3,21 @@ library(tidyverse)
 library(dplyr)
 library(magrittr)
 
+
+
 n <- 100 # number of patients
 T <-  5 # number of observations per patients
 
-data <- as.data.frame(sim_3_cat(n, T, .8)) # generate data with desired structure
+data <- as.data.frame(sim_3_RE(n, T, .8)) # generate data with desired structure
 
 # X = data[,-ncol(data)] # remove y value from for X matrix
 # y = data[,ncol(data)] # assign target variable
 
 
-# create time variable, rename target variable, arrange these two to the front for ease of use
+# create time variable, rename target variable
 data$time <- rep(1:T,n )
 colnames(data)[401] <- "y"
-data %<>% dplyr::select(y, time, everything())
+# data %<>% dplyr::select(y, time, everything()) # this line will affect indexing
 
 
 ## Create vectors of variable names for future data frame
@@ -23,6 +25,21 @@ data %<>% dplyr::select(y, time, everything())
 slope_var <- paste0("Slope",seq(from=1,to=400))
 se_var <- paste0("SE", seq(1,400))
 residual_var <- paste0("Residual",seq(1,400))
+
+
+# build regression model predicting response, y, from time for each patient. Replace y values with the slope values
+# of these regression models. Each patient should have all same y values; we will delete all but one 
+# observation/patient later
+a <- 1; b <- T
+for(i in 1:(nrow(data)/T)){
+  lm <- lm(y[a:b]~time[a:b], data)
+  
+  data$y[a:b] <- lm$coefficients[2]
+
+  a <- a + T; b <- b +T
+}
+# create categorical represenation of y. If slope is positive, assign 1. If negative, assign 0. 
+data$y_cat <- ifelse(data$y < 0, 0, 1)
 
 
 
@@ -73,7 +90,14 @@ for(var in residual_var){
 
 a <- seq(from=1,to=n*T, by=T) # index for first time observation of each patient
 data <- data[a,] # keep only one observation (where the sum was stored) per patient
-      
+ 
+
+
+
+
+
+
+# write.csv(data, file="lm_reduced_data.csv")     
 
 # # Useful for checking dataset
 # lm <- lm(V1[221:225]~time[221:225], data)
