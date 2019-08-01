@@ -6,7 +6,7 @@ library(magrittr)
 n <- 100 # number of patients
 T <-  5 # number of observations per patients
 
-data <- as.data.frame(sim_3(n, T, .8)) # generate data with desired structure
+data <- as.data.frame(sim_3_cat(n, T, .8)) # generate data with desired structure
 
 # X = data[,-ncol(data)] # remove y value from for X matrix
 # y = data[,ncol(data)] # assign target variable
