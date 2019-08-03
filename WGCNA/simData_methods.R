@@ -7,6 +7,9 @@ f_sim = function (X_data){
   return (y)
 }
 
+
+
+
 f_sim_cat = function (X_data){
   eqn <- (5*X_data[,1]+2*X_data[,2]+2*X_data[,3]+5*X_data[,2]*X_data[,3]
           +5*X_data[,301]+2*X_data[,302]+2*X_data[,303]+5*X_data[,302]*X_data[,303])
