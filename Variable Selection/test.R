@@ -32,7 +32,8 @@ library(dplyr)
   T = 5  # number of observations per patient
   p = 400 # number of features
   
-  data <- sim_3_RE(n,T,cor_feature = 0.8)
+  data <- sim_3_RE(n,T,cor_feature = 0.8) # generate AR data set with random effect (use sim_3() for no RE)
+  #data <- sim_2(n,T,cor_feature = 0.8) # genearate CS  data set (no random effect)
 
 
 X = data[,-ncol(data)] # remove y value from for X matrix
