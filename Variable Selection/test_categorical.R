@@ -136,7 +136,7 @@ result_ff[Repeat + 1, 5] <- sum(result_ff[1:Repeat,5])/Repeat
 result_ff[Repeat + 1, 6] <- sum(result_ff[1:Repeat,6])/Repeat
 result_ff[Repeat + 1, 7] <- sum(result_ff[1:Repeat,7])/Repeat
 
-# write.csv(result_ff,file = 'result_ff')
+# write.csv(result_ff,file = 'result_ff.csv')
 
 
 ################## 4). 
