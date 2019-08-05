@@ -10,16 +10,16 @@ f_sim = function (X_data){
 
 
 
-f_sim_cat = function (X_data){
-  eqn <- (5*X_data[,1]+2*X_data[,2]+2*X_data[,3]+5*X_data[,2]*X_data[,3]
-          +5*X_data[,301]+2*X_data[,302]+2*X_data[,303]+5*X_data[,302]*X_data[,303])
-  
-  p <- exp(eqn)/(1+exp(eqn))
-  
-  y <- ifelse(p < .5, 0, 1)
-  
-  return (y)
-}
+# f_sim_cat = function (X_data){
+#   eqn <- (5*X_data[,1]+2*X_data[,2]+2*X_data[,3]+5*X_data[,2]*X_data[,3]
+#           +5*X_data[,301]+2*X_data[,302]+2*X_data[,303]+5*X_data[,302]*X_data[,303])
+#   
+#   p <- exp(eqn)/(1+exp(eqn))
+#   
+#   y <- ifelse(p < .5, 0, 1)
+#   
+#   return (y)
+# }
 
 
 
@@ -102,38 +102,38 @@ sim_3 = function(n,T,cor_feature=0.8,var_noise=1,alpha=0.8){
   return (data)
 }
 
-sim_3_cat = function(n,T,cor_feature=0.8,var_noise=1,alpha=0.8){
-  p = 400
-  p0 = 100
-  data = matrix(0,nrow = n*T, ncol = p+1)
-  
-  #### covariance matrix between features: it is either 0 (independent) or cor_feature ####
-  cov_feature = matrix(0,nrow = p, ncol = p)
-  # cov within the first three modules
-  cov_star = matrix(cor_feature,nrow = p0,ncol = p0)
-  diag(cov_star)=1
-  # put cov_star into cov_feature
-  cov_feature[1:p0,1:p0] = cov_star
-  cov_feature[(p0+1):(2*p0),(p0+1):(2*p0)] = cov_star
-  cov_feature[(2*p0+1):(3*p0),(2*p0+1):(3*p0)] = cov_star
-  cov_feature[(3*p0+1):(4*p0),(3*p0+1):(4*p0)] = diag(p0)
-  ####
-  
-  # create x matrix
-  tmp = (1-alpha**2)**0.5
-  for (i in 1:n){
-    data[1+(i-1)*T,1:p] = mvrnorm(n = 1, rep(0, p), cov_feature)
-    for (j in 2:T){
-      data[j+(i-1)*T,1:p] = (alpha*data[j-1+(i-1)*T,1:p]+
-                               tmp*mvrnorm(n = 1, rep(0, p), cov_feature))
-    }
-  }
-  
-  # create y 
-  data[1:(n*T),p+1] = ( f_sim_cat(data[1:(n*T),1:p]) )
-  
-  return (data)
-}
+# sim_3_cat = function(n,T,cor_feature=0.8,var_noise=1,alpha=0.8){
+#   p = 400
+#   p0 = 100
+#   data = matrix(0,nrow = n*T, ncol = p+1)
+#   
+#   #### covariance matrix between features: it is either 0 (independent) or cor_feature ####
+#   cov_feature = matrix(0,nrow = p, ncol = p)
+#   # cov within the first three modules
+#   cov_star = matrix(cor_feature,nrow = p0,ncol = p0)
+#   diag(cov_star)=1
+#   # put cov_star into cov_feature
+#   cov_feature[1:p0,1:p0] = cov_star
+#   cov_feature[(p0+1):(2*p0),(p0+1):(2*p0)] = cov_star
+#   cov_feature[(2*p0+1):(3*p0),(2*p0+1):(3*p0)] = cov_star
+#   cov_feature[(3*p0+1):(4*p0),(3*p0+1):(4*p0)] = diag(p0)
+#   ####
+#   
+#   # create x matrix
+#   tmp = (1-alpha**2)**0.5
+#   for (i in 1:n){
+#     data[1+(i-1)*T,1:p] = mvrnorm(n = 1, rep(0, p), cov_feature)
+#     for (j in 2:T){
+#       data[j+(i-1)*T,1:p] = (alpha*data[j-1+(i-1)*T,1:p]+
+#                                tmp*mvrnorm(n = 1, rep(0, p), cov_feature))
+#     }
+#   }
+#   
+#   # create y 
+#   data[1:(n*T),p+1] = ( f_sim_cat(data[1:(n*T),1:p]) )
+#   
+#   return (data)
+# }
 
 
 
