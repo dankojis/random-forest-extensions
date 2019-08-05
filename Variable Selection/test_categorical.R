@@ -150,7 +150,7 @@ T = 5  # number of observations per patient
 p = 400 # number of features
 
 for(Repeat in 1:100){
-  set.seed(Repeat+34) # change seed each loop
+  set.seed(Repeat+64) # change seed each loop
   
   
   data <- sim_3_RE(n,T,cor_feature = 0.8)
