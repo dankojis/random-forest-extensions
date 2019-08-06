@@ -30,7 +30,7 @@ n= 100   #number of patients
 T = 5  # number of observations per patient
 p = 400 # number of features
 
-set.seed(111)
+set.seed(131)
 data <- sim_3(n,T,cor_feature = 0.8) # generate AR data set with random effect (use sim_3() for no RE)
 #data <- sim_2(n,T,cor_feature = 0.8) # genearate CS  data set (no random effect)
 
@@ -43,7 +43,7 @@ n_test= 30   #number of patients
 T = 5  # number of observations per patient
 p = 400 # number of features
 
-set.seed(141)
+set.seed(241)
 data_test <- sim_3(n_test,T,cor_feature = 0.8) # generate AR data set (no random effect--> use sim_3_RE() for RE)
 #data <- sim_2(n,T,cor_feature = 0.8) # genearate CS  data set (no random effect)
 
@@ -67,7 +67,7 @@ names(result_rf)[1:400] <-  paste("V",1:400,sep="")
 
 system.time({
   for(Repeat in 1:n_run){
-    set.seed(Repeat+34) # change seed each loop
+    set.seed(Repeat+64) # change seed each loop
     
     rf <- randomForest(X,y) # fit random forest
     
@@ -89,7 +89,7 @@ system.time({
   }
 })
 result_rf[n_run+1,] <-  colMeans(result_rf[1:n_run,])
-# write.csv(result_rf,file = 'results_rf.csv')
+ write.csv(result_rf,file = 'results_rf.csv')
 
 # 3). 
 ####################################################################################
@@ -108,7 +108,7 @@ names(result_ff)[1:400] = paste("V",1:400,sep="")
 
 system.time({
   for(Repeat in 1:n_run){
-    set.seed(Repeat+34) # change seed each loop
+    set.seed(Repeat+99) # change seed each loop
     
     ff <- wff(X,y, select_params = select_params)
     
@@ -147,7 +147,7 @@ names(rf_dif_data)[1:400] <-  paste("V",1:400,sep="")
 
 system.time({
   for(Repeat in 1:n_run){
-    set.seed(Repeat+39) # change seed each loop
+    set.seed(Repeat+102) # change seed each loop
     
     data <- sim_3(n,T,cor_feature = 0.8) # generate AR data set with random effect (use sim_3() for no RE)
     #data <- sim_2(n,T,cor_feature = 0.8) # genearate CS  data set (no random effect)
@@ -197,7 +197,7 @@ names(ff_dif_data)[1:400] = paste("V",1:400,sep="")
 
 system.time({
   for(Repeat in 1:n_run){
-    set.seed(Repeat+43) # change seed each loop
+    set.seed(Repeat+443) # change seed each loop
     
     ff <- wff(X,y, select_params = select_params)
     
@@ -218,4 +218,10 @@ system.time({
 ff_dif_data[n_run+1,] = colMeans(ff_dif_data[1:n_run,])
 
 write.csv(ff_dif_data,file = 'ff_dif_data.csv')
+
+
+
+# save data set (for steps 2 and 3) and test data set
+write.csv(data, file = 'data.csv')
+write.csv(data_test, file = 'data_test.csv')
 
