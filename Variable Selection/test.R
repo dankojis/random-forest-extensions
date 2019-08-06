@@ -199,6 +199,12 @@ system.time({
   for(Repeat in 1:n_run){
     set.seed(Repeat+443) # change seed each loop
     
+    data <- sim_3(n,T,cor_feature = 0.8) # generate AR data set with random effect (use sim_3() for no RE)
+    #data <- sim_2(n,T,cor_feature = 0.8) # genearate CS  data set (no random effect)
+    
+    X = as.data.frame(  data[,-ncol(data)]  ) # remove y value from for X matrix
+    y = data[,ncol(data)] # assign target variable
+    
     ff <- wff(X,y, select_params = select_params)
     
     top_variables = ff$feature_list[,1]
