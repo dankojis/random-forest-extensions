@@ -13,6 +13,8 @@ library(dplyr)
 library(ggplot2)
 ```
 
+One data set was generated and a random forest model was fit 100 times to this same data set. The top 10 variables were recorded for each model. The frequency of their selection is depicted below. 
+
 
 ```{r random forest same data, echo=FALSE}
 
@@ -35,6 +37,7 @@ barplot(freq_both~var_both,
 
 
 ```
+One data set was generated and a fuzzy forest model was fit 100 times to this same data set. The top 10 variables were recorded for each model. The frequency of their selection is depicted below. 
 
 ```{r fuzzy forest same data, echo=FALSE}
 
@@ -58,6 +61,9 @@ barplot(freq_both~var_both,
 
 ```
 
+
+
+For 100 times, a new data set was generated and random forest model was fit. The top 20 variables were recorded and their frequency of selction is depicted below. 
 
 ```{r random forest different data, echo=FALSE}
 
