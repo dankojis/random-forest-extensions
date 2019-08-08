@@ -81,17 +81,17 @@ get_split_names = function(tree,data){
 
 ## Fuzzy Model Tree
 
- regress_var = paste("PC",c(2),sep="")
+ regress_var = paste("PC",c(1),sep="")
 #regress_var = paste("V",1:100,sep="")
 # regress_var = paste("V",c(1,2,3,301,302,303),sep="")
 # regress_var = paste("V",c(1,2,3,70,52,185,285,266,301,302,303),sep="")
 
  split_var = paste("V",101:200,sep="") # For demo: CHANGE 101 TO 100 and alpha=0.5
-# split_var = paste("V",1:100,sep="")
+split_var = paste("V",1:100,sep="")
 # split_var = paste("V",c(1,2,3,70,52,185,285,266,301,302,303),sep="")
 
-# Formula = as.formula(paste("y~",paste(regress_var,collapse = "+"), "|",
-    #                     paste(split_var,collapse = "+")))
+ Formula = as.formula(paste("y~",paste(regress_var,collapse = "+"), "|",
+                         paste(split_var,collapse = "+")))
 
 # If just use regular tree (not model tree,no regress_var): miss 302 and 303!
 split_var = paste("V",1:400,sep="")

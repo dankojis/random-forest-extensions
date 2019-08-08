@@ -152,10 +152,10 @@ sim_3_RE = function(n,T,cor_feature=0.8,var_noise=1,alpha=0.8){
 # is now also dependent on a quadratic function depenent on time. The equation takes the form:
 #    y = f(x) + (a1x^2 +b1x +c1)*group1 + (a2x^2 +b2x +c2)*group2 + error
 # where the group variables are either 0 or 1 (1 indicating that the patient is in that group, 0 otherwise).
-sim_5 = function(n,T,cor_feature=0.8,var_noise=1,cor_noise=0.8, a1=5,a2=-5,b1=1,b2=1,c1=-10, c2 =10){
+sim_quad = function(n,T,cor_feature=0.8,var_noise=1,cor_noise=0.8, a1=5,a2=-5,b1=1,b2=1,c1=-10, c2 =10){
   p = 400
   p0 = 100
-  data = matrix(0,nrow = n*T, ncol = p+1)
+  data = matrix(0,nrow = n*T, ncol = p)
 
   #### covariance matrix between features: it is either 0 (independent) or cor_feature ####
   cov_feature = matrix(0,nrow = p, ncol = p)
@@ -191,7 +191,7 @@ sim_5 = function(n,T,cor_feature=0.8,var_noise=1,cor_noise=0.8, a1=5,a2=-5,b1=1,
 
 
   # create label y
-  data[1:(n*T),p+1] = ( f_sim(data[1:(n*T),1:p])+
+  data$y = ( f_sim(data[1:(n*T),1:p])+
 
                           a1*(data$time - median(1:T))^2*data$group1 + a2*(data$time - median(1:T))^2*data$group2 +
                           b1*data$time*data$group1 + b2*data$time*data$group2 + c1*data$group1 + c2*data$group2 +
@@ -203,9 +203,9 @@ sim_5 = function(n,T,cor_feature=0.8,var_noise=1,cor_noise=0.8, a1=5,a2=-5,b1=1,
 
 }
 
- plot(data$time[251:500],data$V401[251:500])
-  plot(data$time[1:250],data$V401[1:250])
-  plot(data$time,data$V401)
+ # plot(data$time[251:500],data$y[251:500])
+ #  plot(data$time[1:250],data$y[1:250])
+ #  plot(data$time,data$y)
 
 
 
