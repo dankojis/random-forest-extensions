@@ -203,9 +203,9 @@ sim_quad = function(n,T,cor_feature=0.8,var_noise=1,cor_noise=0.8, a1=5,a2=-5,b1
 
 }
 
- # plot(data$time[251:500],data$y[251:500])
- #  plot(data$time[1:250],data$y[1:250])
- #  plot(data$time,data$y)
+  # plot(data$time[251:500],data$y[251:500])
+  # plot(data$time[1:250],data$y[1:250])
+  # plot(data$time,data$y)
 
 
 
