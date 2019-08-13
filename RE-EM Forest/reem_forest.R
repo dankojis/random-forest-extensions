@@ -47,8 +47,12 @@ random_forest_algorithm = function(train_data, ntree=500, mtry=max(floor((ncol(t
     sub_feat <- subset_features(X_boot, mtry) # choose a subset of size mtry of original features
     formula = as.formula(paste("y~",paste(sub_feat,collapse="+"))) 
     
+    
+    ##### Decision Tree Implemenation
     #tree <- REEMtree(formula = formula, data=boot,random=~1|patient)
     tree <- rpart(formula,data=boot)
+    #####
+    
     
     forest <- list.append(forest, tree)
     
@@ -72,9 +76,10 @@ random_forest_predict =  function(forest_model, test_data){
 }
 
 
-rf <- random_forest_algorithm(data, ntree = 480)
+rf <- random_forest_algorithm(data, ntree = 480) #  ~ 5 minutes to run
 
 
+# *** Computationally slow ~20 min for example data
 ###### Permutation Test for Variable Importance
 # returns list of [1]names of variables in order of importance [2]dataframe of varaibles and their error difference
 random_forest_importance = function(forest_model, test_data){
