@@ -7,8 +7,8 @@ library(caret)
 
 
 
-# Generate data
-################
+# GENERATE DATA       # Date Structured as follows: X variables, y variable, patient/cluster variable
+########################################################################################################
 n <- 100
 T <- 5
 data <- as.data.frame(sim_2(n,T)) # genearate CS  data set (no random effect)
@@ -30,14 +30,14 @@ y_test = data_test[,ncol(data_test)] # assign target variable
 for (i in 1:n){
   data_test$patient[(1+(i-1)*T):(i*T)] = rep(i,T)
 }
+########################################################################################################
 
 
-p <- ncol(X)
-mtry = if (!is.null(y) && !is.factor(y)) max(floor(p/3), 1) else floor(sqrt(p))
+# RE-EM Forest Functions
 
 
 #################   # parameter to include : dt_max_depth, mtry
-random_forest_algorithm = function(train_data, ntree = 500){
+random_forest_algorithm = function(train_data, ntree=500, mtry=max(floor((ncol(train_data)-2)/3), 1) ){
   forest <- list()
   
   for(i in 1:ntree){
@@ -83,21 +83,21 @@ random_forest_importance = function(forest_model, test_data){
   y_test = test_data[,ncol(test_data)] # assign target variable
   
   pred <- random_forest_predict(forest_model, test_data)
-  base_accuracy <- mean((pred-y_test)^2)
-  accuracy_differnce <- as.data.frame(matrix( ,1,ncol=0)) #create empty df to store
+  base_error <- mean((pred-y_test)^2) # baseline error from non-permutated data
+  error_difference <- as.data.frame(matrix( ,1,ncol=0)) #create empty df to store
   
   for(var in colnames(X_test)){
     data_perm <- test_data
     data_perm[var] <- permute(test_data[[var]]) # permute column of interest
     
     perm_predictions <- random_forest_predict(forest_model = forest_model, test_data = data_perm)
-    perm_accuracy <- mean((perm_predictions-y_test)^2)
+    perm_error <- mean((perm_predictions-y_test)^2)
     
-    accuracy_differnce[var] <- abs(base_accuracy - perm_accuracy)  #### **computationally inefficient (dataframe=bad)
+    error_difference[var] <- abs(base_error - perm_error)  #### **computationally inefficient (dataframe=bad)
     
   }
-  var_importance <- colnames(sort(accuracy_differnce, decreasing = TRUE))
-  return(list(var_importance, accuracy_differnce))
+  var_importance <- colnames(sort(error_difference, decreasing = TRUE))
+  return(list(var_importance, error_difference))
   
 }
 
