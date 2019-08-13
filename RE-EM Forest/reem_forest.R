@@ -49,7 +49,7 @@ random_forest_algorithm = function(train_data, ntree=500, mtry=max(floor((ncol(t
     
     
     ##### Decision Tree Implemenation
-    #tree <- REEMtree(formula = formula, data=boot,random=~1|patient)
+    tree <- REEMtree(formula = formula, data=boot,random=~1|patient)
     tree <- rpart(formula,data=boot)
     #####
     
@@ -66,7 +66,7 @@ random_forest_predict =  function(forest_model, test_data){
   all_predictions <- as.data.frame(matrix( ,nrow(test_data),ncol=0)) #create empty dataframe
   
   for(i in 1:length(forest_model)){
-    tree_predictions <- unlist(predict(forest_model[i], test_data)) # predictions from ith tree
+    tree_predictions <- unlist(predict(forest_model[i], test_data, EstimateRandomEffects=FALSE)) # predictions from ith tree
     all_predictions <- as.data.frame(cbind(all_predictions,tree_predictions)) # concatenate predictions from each tree
   }
   
@@ -76,7 +76,7 @@ random_forest_predict =  function(forest_model, test_data){
 }
 
 
-rf <- random_forest_algorithm(data, ntree = 480) #  ~ 5 minutes to run
+reem.forest <- random_forest_algorithm(data, ntree = 500) #  ~ 5 minutes to run
 
 
 # *** Computationally slow ~20 min for example data
