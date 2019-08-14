@@ -2,8 +2,8 @@
 
 
 # function takes a random sample (of size mtry) of features from X matrix. Returns variable names
-subset_features = function(X_matrix= X, mtry){
-  features <- colnames(X)
+subset_features = function(X_matrix, mtry){
+  features <- colnames(X_matrix)
   subset <- sample(features, mtry, replace = FALSE)
   return(subset)
 }
