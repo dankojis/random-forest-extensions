@@ -48,12 +48,12 @@ y_test = data_test$y # assign target variable
 
 
 reem.forest <- random_forest_algorithm(data, ntree = 500)
-reem.forest.pred <- random_forest_predict(reem.forest, data_test)
-reem.forest.error <-  mean((reem.forest.pred-data$y)^2)
+reem.forest.pred <- forest_predit(reem.forest, data_test)
+reem.forest.error <-  mean((reem.forest.pred-y_test)^2)
 
 rf <- randomForest(X,y)
 rf.pred <- predict(rf, X_test)
-rf.error <- mean((rf.pred-data$y)^2)
+rf.error <- mean((rf.pred-y_test)^2)
 
 
 
@@ -89,7 +89,7 @@ for(n in n_values){
   
   ######## MODELS
   # reem.forest <- random_forest_algorithm(data, ntree = 500)
-  # reem.forest.pred <- random_forest_predict(reem.forest, data_test)
+  # reem.forest.pred <- forest_predit(reem.forest, data_test)
   # reem.forest.error <-  mean((reem.forest.pred-data$y)^2)
   
   rf <- randomForest(X,y)
@@ -135,7 +135,7 @@ for(n in n_values){
   
   ######## MODELS
   reem.forest <- random_forest_algorithm(data, ntree = 500)
-  reem.forest.pred <- random_forest_predict(reem.forest, data_test)
+  reem.forest.pred <- forest_predit(reem.forest, data_test)
   reem.forest.error <-  mean((reem.forest.pred-y_test)^2)
 
   df2[i,"n"] <- n

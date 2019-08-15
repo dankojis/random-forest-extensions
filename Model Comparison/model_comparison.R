@@ -28,7 +28,7 @@ y_test = data_test$y # assign target variable
 
 ####################### Random Forest
 
-n_values <- c(10,20,40,60,80,100,200,300,500)
+n_values <- c(30,50,70,150,400,1000)
 
 df = data.frame(matrix(0,length(n_values),3))
 colnames(df) <- c("model", "n", "MSE")
@@ -57,7 +57,7 @@ for(n in n_values){
 
 
 ###################### REEM Tree
-n_values <- c(10,20,40,60,80,100,200,300,500)
+n_values <- c(30,50,70,150,400,1000)
 
 df2 = data.frame(matrix(0,length(n_values),3))
 colnames(df2) <- c("model", "n", "MSE")
@@ -90,7 +90,7 @@ for(n in n_values){
 
 
 ###################### Bagging REEM Trees
-n_values <- c(10,20,40,60,80,100,200,300,500)
+n_values <- c(30,50,70,150,400,1000)
 
 df3 = data.frame(matrix(0,length(n_values),3))
 colnames(df3) <- c("model", "n", "MSE")
@@ -122,9 +122,20 @@ for(n in n_values){
 }
 
 
-
+# first_total <- df_total
 
 df_total <- rbind(df, df2, df3)
 
 
-write.csv(df_total,file = 'model_comparison1.csv')
+write.csv(df_total,file = 'model_comparison3.csv')
+
+
+# XY Scatterplot
+ggplot(df_total, aes(x=n, y=MSE)) +
+  geom_point(aes( color=model))+
+  #geom_point(aes(shape=model),col='black', size=1, shape=model) + 
+  aes(col=model)+ #can add 3rd dimension, can add dimension with size too. 
+  geom_smooth(method="loess", se=FALSE) + # se=FALSE to turnoff confidence bands 
+  #xlim(c(10, 20)) + ylim(c(3, 5)) +  # set X and Y boundaries
+  #scale_x_continuous(breaks=seq(0, 40, 5), labels = sprintf("%1.2f%%", seq(0, 40, 5)))+  # set ticks/text on axis
+  labs(title="Model Comparison: Mean Squared Error vs Sample Size", subtitle="subtitle", y="Mean Squared Error (MSE)", x="Sample Size (n)", caption="caption")
