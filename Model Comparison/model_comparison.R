@@ -10,6 +10,7 @@ library("glmertree")
 
 # TESTING DATA
 ######################################################################
+set.seed(6)
 n_test <- 100 # number of patients
 T <-  5 # number of observations per patients
 
@@ -28,7 +29,7 @@ y_test = data_test$y # assign target variable
 
 ####################### Random Forest
 
-n_values <- c(30,50,70,150,400,1000)
+n_values <- c(10,20,30,40,50,60,70,80,100,150,200,300,400,500,1000)
 
 df = data.frame(matrix(0,length(n_values),3))
 colnames(df) <- c("model", "n", "MSE")
@@ -57,7 +58,7 @@ for(n in n_values){
 
 
 ###################### REEM Tree
-n_values <- c(30,50,70,150,400,1000)
+n_values <- c(10,20,30,40,50,60,70,80,100,150,200,300,400,500,1000)
 
 df2 = data.frame(matrix(0,length(n_values),3))
 colnames(df2) <- c("model", "n", "MSE")
@@ -90,7 +91,7 @@ for(n in n_values){
 
 
 ###################### Bagging REEM Trees
-n_values <- c(30,50,70,150,400,1000)
+n_values <- c(10,20,30,40,50,60,70,80,100,150,200,300,400,500,1000)
 
 df3 = data.frame(matrix(0,length(n_values),3))
 colnames(df3) <- c("model", "n", "MSE")
@@ -122,12 +123,71 @@ for(n in n_values){
 }
 
 
-# first_total <- df_total
+###################### Longtrees
+# testing data
+n_test <- 100 # number of patients
+T <-  5 # number of observations per patients
+set.seed(101)
+data_test <- sim_quad(n_test,T)
+# data_test <- sim_quad(n_test, T)
+data_test$time2 = (data_test$time)^2
+
+n_values <- c(10,20,30,40,50,60,70,80,100,150,200,300,400,500,1000)
+
+df4 = data.frame(matrix(0,length(n_values),3))
+colnames(df4) <- c("model", "n", "MSE")
+df4$model <- "Longtree"
+
+fixed_regress = c("time","time2")
+fixed_split = c("treatment")
+cluster = "patient"
+var_select = paste("V",1:400,sep="")
+
+i <- 1
+for(n in n_values){
+  set.seed(99) # ***seed should be same for each model! Test on same data
+  
+  # training data
+  T <-  5 # number of observations per patients
+
+  data <- sim_quad(n,T)
+  # add time_squared
+  data$time2 = (data$time)^2
+  
+  
+
+  
+  
+  
+  
+  
+  
+  ######## MODEL
+  mytree = Longtree(data,fixed_regress=fixed_regress,fixed_split=fixed_split,
+                    var_select=var_select,cluster=cluster,Fuzzy=TRUE)
+  mytree.error <- mean((predict(mytree,newdata=data_test)-data_test$y)**2)
+  
+  
+  df4[i,"n"] <- n
+  df4[i, "MSE"] <- mytree.error
+  i <- i+1
+}
+
+
+
+
+
+
+
+
+
+
+
 
 df_total <- rbind(df, df2, df3)
 
 
-write.csv(df_total,file = 'model_comparison3.csv')
+write.csv(df_total,file = 'model_comparison4.csv')
 
 
 # XY Scatterplot
