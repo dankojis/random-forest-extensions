@@ -12,12 +12,14 @@ library(randomForest)
 # train$time2 <- (train$time)^2
 # 
 # 
+
+# validation set data
 set.seed(102) # seed for validation set
 test <- sim_time(n,imp_mod=imp_mod, var_noise=var_noise)
 test$time2 = (test$time)^2
 
 
-# size of training dataset
+# size of training dataset to best tested
 n_values <- c(100, 200, 300, 400, 500)
 
 # Paramters to test
@@ -63,7 +65,7 @@ for(n in n_values){
     }
   
   
-  
+# save dataframe as csv
 write.csv(df, file = "rf_tuning_mtry_n.csv")
   
 
