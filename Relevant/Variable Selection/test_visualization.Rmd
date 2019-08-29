@@ -1,0 +1,130 @@
+---
+title: "test_visualization"
+author: "Daniel Kojis"
+date: "August 6, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+```
+
+One data set was generated and a random forest model was fit 100 times to this same data set. The top 10 variables were recorded for each model. The frequency of their selection is depicted below. 
+
+
+```{r random forest same data, echo=FALSE}
+
+data <- read.csv('results_rf.csv')
+X <- data[,-ncol(data)] # remove last column (error)
+X <- X[,-1] # remove ID variabla 'X'
+
+imp_var = c(1,2,3,301,302,303) # variables of interest
+selected_var <- c(which(X[101,]>0.1)) #  variables selected at frequency above 10%
+var_both <- unique(c(imp_var,selected_var)) # variables selcted at above 10% and original variables of interest
+
+
+freq <- as.numeric(X[101,imp_var])
+barplot(freq~imp_var,
+        main="Random Forest: 100 simulations (same data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+
+freq_both <- as.numeric(X[101,var_both])
+barplot(freq_both~var_both,
+        main="Random Forest: 100 simulations (same data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+
+
+```
+One data set was generated and a fuzzy forest model was fit 100 times to this same data set. The top 10 variables were recorded for each model. The frequency of their selection is depicted below. 
+
+```{r fuzzy forest same data, echo=FALSE}
+
+data <- read.csv('results_ff.csv')
+X <- data[,-ncol(data)] # remove last column (error)
+X <- X[,-1] # remove ID variabla 'X'
+
+imp_var = c(1,2,3,301,302,303) # variables of interest
+selected_var <- c(which(X[101,]>0.1)) #  variables selected at frequency above 10%
+var_both <- unique(c(imp_var,selected_var)) # variables selcted at above 10% and original variables of interest
+
+
+freq <- as.numeric(X[101,imp_var])
+barplot(freq~imp_var,
+        main="Fuzzy Forest: 100 simulations (same data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+
+freq_both <- as.numeric(X[101,var_both])
+barplot(freq_both~var_both,
+        main="Fuzzy Forest: 100 simulations (same data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+
+
+```
+
+
+
+For 100 times, a new data set was generated and random forest model was fit. The top 20 variables were recorded and their frequency of selction is depicted below. 
+
+```{r random forest different data, echo=FALSE}
+
+data <- read.csv('rf_dif_data.csv')
+X <- data[,-ncol(data)] # remove last column (error)
+X <- X[,-1] # remove ID variabla 'X'
+
+imp_var = c(1,2,3,301,302,303) # variables of interest
+selected_var <- c(which(X[101,]>0.2)) #  variables selected at frequency above 10%
+var_both <- unique(c(imp_var,selected_var)) # variables selcted at above 10% and original variables of interest
+
+
+freq <- as.numeric(X[101,imp_var])
+barplot(freq~imp_var,
+        main="Random Forest: 100 simulations (different data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+
+freq_both <- as.numeric(X[101,var_both])
+barplot(freq_both~var_both,
+        main="Random Forest: 100 simulations (different data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+
+
+```
+
+
+```{r fuzzy forest different data, echo=FALSE}
+
+data <- read.csv('ff_dif_data.csv')
+X <- data[,-ncol(data)] # remove last column (error)
+X <- X[,-1] # remove ID variabla 'X'
+
+imp_var = c(1,2,3,301,302,303) # variables of interest
+selected_var <- c(which(X[101,]>0.2)) #  variables selected at frequency above 10%
+var_both <- unique(c(imp_var,selected_var)) # variables selcted at above 10% and original variables of interest
+
+
+# freq <- as.numeric(X[101,imp_var])
+# barplot(freq~imp_var,
+#         main="Fuzzy Forest: 100 simulations (different data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+# 
+# freq_both <- as.numeric(X[101,var_both])
+# barplot(freq_both~var_both,
+#         main="Fuzzy Forest: 100 simulations (different data)", ylab = 'Frequency of Selection', xlab = 'Variable')
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

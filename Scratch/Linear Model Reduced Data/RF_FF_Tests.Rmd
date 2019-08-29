@@ -1,0 +1,109 @@
+---
+title: "RF_FF_Tests"
+author: "Daniel Kojis"
+date: "August 1, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r test}
+source('simData_methods.R')
+library(WGCNA)
+library(randomForest)
+library("fuzzyforest")
+library(dplyr)
+library(magrittr)
+
+
+
+# CS Structured Data
+######################
+
+# data <- read.csv("data_CS.csv")
+# data %<>% dplyr::select(-'X') 
+# Alternatively, generate new CS data 
+ data <- as.data.frame(sim_2(100,5))
+
+X = data[,-ncol(data)] # remove y value from for X matrix
+y = data[,ncol(data)] # assign target variable
+
+
+# Random Forest
+rf <- randomForest(X,y)
+varImpPlot(rf,type=2,main="RF Variable Importance")
+
+
+# Fuzzy Forest
+wff = wff(X,y)
+varImpPlot(wff$final_rf,type=2,main=" FF Variable Importance")
+
+
+# AR Structured Data
+######################
+# data <- read.csv("data_AR.csv")
+# data %<>% dplyr::select(-'X') 
+data <- as.data.frame(simAR_dif_cor(n=100,T=5,group_cor=c(0.7,0.75,0.8,0) ))
+
+X = data[,-ncol(data)] # remove y value from for X matrix
+y = data[,ncol(data)] # assign target variable
+
+
+# Random Forest
+rf <- randomForest(X,y)
+varImpPlot(rf,type=2,main="RF Variable Importance")
+
+
+# Fuzzy Forest
+wff = wff(X,y)
+varImpPlot(wff$final_rf,type=2,main="FF Variable Importance")
+
+
+
+
+
+# Linear model reduced data
+data <- read.csv('lm_reduced_data.csv')
+# data <- data # run lm_reduce_data (create function)
+X <- data %>%  dplyr::select(-c( 'X', 'time', 'y_cat', 'y') )
+y <-  data$y
+
+
+# Random Forest
+rf <- randomForest(X,y)
+varImpPlot(rf,type=2,main="RF Variable Importance")
+
+
+# Fuzzy Forest
+wff = wff(X,y)
+varImpPlot(wff$final_rf,type=2,main="FF Variable Importance")
+
+
+
+# ## categorical
+# 
+# data <- read.csv('lm_reduced_data.csv')
+# # data <- data # run lm_reduce_data (create function)
+# X <- data %>%  dplyr::select(-c( 'X', 'time', 'y_cat', 'y') )
+# y <-  data$y_cat
+# 
+# # Random Forest
+# rf <- randomForest(X,y)
+# varImpPlot(rf,type=2,main="RF Variable Importance")
+# 
+# 
+# # Fuzzy Forest
+# wff = wff(X,y,)
+# varImpPlot(wff$final_rf,type=2,main="FF Variable Importance")
+# 
+
+
+
+
+
+
+```
